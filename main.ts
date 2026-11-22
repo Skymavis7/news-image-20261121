@@ -6,7 +6,7 @@
 // MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,3 +20,8 @@ if (!existsSync(src)) {
 }
 mkdirSync(out, { recursive: true });
 copyFileSync(src, dst);
+
+// Report what was written, so a run's result is visible without hashing
+// the file by hand. This goes to stdout only; the image bytes are untouched.
+const bytes = statSync(dst).size;
+console.log(`wrote ${dst} (${bytes} bytes)`);
